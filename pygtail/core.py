@@ -264,7 +264,10 @@ class Pygtail(object):
                 self.fh = io.open(filename, "r", 1, encoding=self.encoding)
             if self.read_from_end and not exists(self.offset_file):
                 self.fh.seek(0, os.SEEK_END)
-            else:
+            elif self.offset != 0:
+                assert self.copytruncate or (
+                    self.offset_file_inode == fstat(self.fh.fileno()).st_ino
+                ), f"{self.offset_file_inode=} {fstat(self.fh.fileno()).st_ino=} {self.offset=}"
                 self.fh.seek(self.offset)
 
         return self.fh

@@ -24,9 +24,9 @@ class PygtailTest(unittest.TestCase):
 
     def setUp(self):
         self.test_lines = ["1\n", "2\n", "3\n"]
-        self.test_str = ''.join(self.test_lines)
+        self.test_str = "".join(self.test_lines)
         self.logfile = tempfile.NamedTemporaryFile(delete=False)
-        self.logfile.write(self.test_str.encode('utf-8'))
+        self.logfile.write(self.test_str.encode("utf-8"))
         self.logfile.close()
 
     def append(self, str):
@@ -42,7 +42,12 @@ class PygtailTest(unittest.TestCase):
 
     def tearDown(self):
         filename = self.logfile.name
-        for tmpfile in [filename, filename + ".offset", filename + ".1", filename + ".1.gz"]:
+        for tmpfile in [
+            filename,
+            filename + ".offset",
+            filename + ".1",
+            filename + ".1.gz",
+        ]:
             if os.path.exists(tmpfile):
                 os.remove(tmpfile)
 
@@ -82,18 +87,18 @@ class PygtailTest(unittest.TestCase):
         self.append(new_lines[0])
 
         # put content to gzip file
-        gzip_handle = gzip.open("%s.1.gz" % self.logfile.name, 'wb')
-        with open(self.logfile.name, 'rb') as logfile:
+        gzip_handle = gzip.open("%s.1.gz" % self.logfile.name, "wb")
+        with open(self.logfile.name, "rb") as logfile:
             gzip_handle.write(logfile.read())
         gzip_handle.close()
 
-        with open(self.logfile.name, 'w'):
+        with open(self.logfile.name, "w"):
             # truncate file
             pass
 
         self.append(new_lines[1])
         pygtail = Pygtail(self.logfile.name)
-        self.assertEqual(pygtail.read(), ''.join(new_lines))
+        self.assertEqual(pygtail.read(), "".join(new_lines))
 
     def test_logrotate_with_delay_compress(self):
         new_lines = ["4\n5\n", "6\n7\n"]
@@ -103,7 +108,7 @@ class PygtailTest(unittest.TestCase):
         os.rename(self.logfile.name, "%s.1" % self.logfile.name)
         self.append(new_lines[1])
         pygtail = Pygtail(self.logfile.name)
-        self.assertEqual(pygtail.read(), ''.join(new_lines))
+        self.assertEqual(pygtail.read(), "".join(new_lines))
 
     def test_logrotate_with_dateext_with_delaycompress(self):
         new_lines = ["4\n5\n", "6\n7\n"]
@@ -113,7 +118,7 @@ class PygtailTest(unittest.TestCase):
         os.rename(self.logfile.name, "%s-20160616" % self.logfile.name)
         self.append(new_lines[1])
         pygtail = Pygtail(self.logfile.name)
-        self.assertEqual(pygtail.read(), ''.join(new_lines))
+        self.assertEqual(pygtail.read(), "".join(new_lines))
 
     def test_logrotate_with_dateext_without_delaycompress(self):
         new_lines = ["4\n5\n", "6\n7\n"]
@@ -122,18 +127,18 @@ class PygtailTest(unittest.TestCase):
         self.append(new_lines[0])
 
         # put content to gzip file
-        gzip_handle = gzip.open("%s-20160616.gz" % self.logfile.name, 'wb')
-        with open(self.logfile.name, 'rb') as logfile:
+        gzip_handle = gzip.open("%s-20160616.gz" % self.logfile.name, "wb")
+        with open(self.logfile.name, "rb") as logfile:
             gzip_handle.write(logfile.read())
         gzip_handle.close()
 
-        with open(self.logfile.name, 'w'):
+        with open(self.logfile.name, "w"):
             # truncate file
             pass
 
         self.append(new_lines[1])
         pygtail = Pygtail(self.logfile.name)
-        self.assertEqual(pygtail.read(), ''.join(new_lines))
+        self.assertEqual(pygtail.read(), "".join(new_lines))
 
     def test_logrotate_with_dateext2_with_delaycompress(self):
         new_lines = ["4\n5\n", "6\n7\n"]
@@ -143,7 +148,7 @@ class PygtailTest(unittest.TestCase):
         os.rename(self.logfile.name, "%s-20160616-1466093571" % self.logfile.name)
         self.append(new_lines[1])
         pygtail = Pygtail(self.logfile.name)
-        self.assertEqual(pygtail.read(), ''.join(new_lines))
+        self.assertEqual(pygtail.read(), "".join(new_lines))
 
     def test_logrotate_with_dateext2_without_delaycompress(self):
         new_lines = ["4\n5\n", "6\n7\n"]
@@ -152,18 +157,18 @@ class PygtailTest(unittest.TestCase):
         self.append(new_lines[0])
 
         # put content to gzip file
-        gzip_handle = gzip.open("%s-20160616-1466093571.gz" % self.logfile.name, 'wb')
-        with open(self.logfile.name, 'rb') as logfile:
+        gzip_handle = gzip.open("%s-20160616-1466093571.gz" % self.logfile.name, "wb")
+        with open(self.logfile.name, "rb") as logfile:
             gzip_handle.write(logfile.read())
         gzip_handle.close()
 
-        with open(self.logfile.name, 'w'):
+        with open(self.logfile.name, "w"):
             # truncate file
             pass
 
         self.append(new_lines[1])
         pygtail = Pygtail(self.logfile.name)
-        self.assertEqual(pygtail.read(), ''.join(new_lines))
+        self.assertEqual(pygtail.read(), "".join(new_lines))
 
     def test_timed_rotating_file_handler(self):
         new_lines = ["4\n5\n", "6\n7\n"]
@@ -173,7 +178,7 @@ class PygtailTest(unittest.TestCase):
         os.rename(self.logfile.name, "%s.2016-06-16" % self.logfile.name)
         self.append(new_lines[1])
         pygtail = Pygtail(self.logfile.name)
-        self.assertEqual(pygtail.read(), ''.join(new_lines))
+        self.assertEqual(pygtail.read(), "".join(new_lines))
 
     def test_custom_rotating_file_handler_with_prepend(self):
         new_lines = ["4\n5\n", "6\n7\n"]
@@ -181,10 +186,13 @@ class PygtailTest(unittest.TestCase):
         pygtail.read()
         self.append(new_lines[0])
         file_dir, rel_filename = os.path.split(self.logfile.name)
-        os.rename(self.logfile.name, os.path.join(file_dir, "custom_log_pattern.%s" % rel_filename))
+        os.rename(
+            self.logfile.name,
+            os.path.join(file_dir, "custom_log_pattern.%s" % rel_filename),
+        )
         self.append(new_lines[1])
         pygtail = Pygtail(self.logfile.name, log_patterns=["custom_log_pattern.%s"])
-        self.assertEqual(pygtail.read(), ''.join(new_lines))
+        self.assertEqual(pygtail.read(), "".join(new_lines))
 
     def test_copytruncate_off_smaller(self):
         self.test_readlines()
@@ -197,7 +205,9 @@ class PygtailTest(unittest.TestCase):
         captured_value = captured.getvalue()
         sys.stderr = sys.__stderr__
 
-        assert_class = self.assertRegex if sys.version_info >= (3, 1) else self.assertRegexpMatches
+        assert_class = (
+            self.assertRegex if sys.version_info >= (3, 1) else self.assertRegexpMatches
+        )
         assert_class(captured_value, r".*?\bWARN\b.*?\bshrank\b.*")
         self.assertEqual(pygtail.read(), None)
 
@@ -230,19 +240,19 @@ class PygtailTest(unittest.TestCase):
         log_inode = os.stat(self.logfile.name).st_ino
 
         next(pygtail)
-        with open(self.logfile.name + '.offset', 'r') as f:
+        with open(self.logfile.name + ".offset", "r") as f:
             inode, offset = int(next(f)), int(next(f))
         self.assertEqual(inode, log_inode)
         self.assertEqual(offset, 2)
 
         next(pygtail)
-        with open(self.logfile.name + '.offset', 'r') as f:
+        with open(self.logfile.name + ".offset", "r") as f:
             inode, offset = int(next(f)), int(next(f))
         self.assertEqual(inode, log_inode)
         self.assertEqual(offset, 4)
 
         next(pygtail)
-        with open(self.logfile.name + '.offset', 'r') as f:
+        with open(self.logfile.name + ".offset", "r") as f:
             inode, offset = int(next(f)), int(next(f))
         self.assertEqual(inode, log_inode)
         self.assertEqual(offset, 6)
@@ -253,8 +263,7 @@ class PygtailTest(unittest.TestCase):
         def record_update():
             updates[0] += 1
 
-        pygtail = Pygtail(self.logfile.name, paranoid=True,
-                          on_update=record_update)
+        pygtail = Pygtail(self.logfile.name, paranoid=True, on_update=record_update)
 
         self.assertEqual(updates[0], 0)
         next(pygtail)
@@ -307,7 +316,7 @@ class PygtailTest(unittest.TestCase):
         # append will recreate the original log file
         self.append(new_lines[0])
         self.append(new_lines[1])
-        self.assertEqual(pygtail.read(), ''.join(new_lines))
+        self.assertEqual(pygtail.read(), "".join(new_lines))
 
     def test_renamecreate_unknown_rotated_name(self):
         """
@@ -327,10 +336,11 @@ class PygtailTest(unittest.TestCase):
         pygtail = Pygtail(self.logfile.name)
         captured_value = captured.getvalue()
         sys.stderr = sys.__stderr__
-        assert_class = self.assertRegex if sys.version_info >= (3, 1) else self.assertRegexpMatches
+        assert_class = (
+            self.assertRegex if sys.version_info >= (3, 1) else self.assertRegexpMatches
+        )
         assert_class(captured_value, r".*?\bWARN\b.*?\bResetting\b.*")
-        self.assertEqual(pygtail.read(), ''.join(new_lines))
-
+        self.assertEqual(pygtail.read(), "".join(new_lines))
 
     def test_full_lines(self):
         """
@@ -345,7 +355,6 @@ class PygtailTest(unittest.TestCase):
         pygtail.read()
         self.append(last_line)
         self.assertEqual(pygtail.read(), "5,5.5\n6\n")
-
 
     def test_save_on_end(self):
         """
@@ -365,7 +374,6 @@ class PygtailTest(unittest.TestCase):
         pygtail.update_offset_file()
         self.assertEqual(updates[0], 1)
 
-
     def test_iterator_with_offsets(self):
         """
         Test save offset is not automatically saved once the end of the file is reached
@@ -375,7 +383,12 @@ class PygtailTest(unittest.TestCase):
         def record_update():
             updates[0] += 1
 
-        pygtail = Pygtail(self.logfile.name, save_on_end=False, on_update=record_update, copytruncate=False,)
+        pygtail = Pygtail(
+            self.logfile.name,
+            save_on_end=False,
+            on_update=record_update,
+            copytruncate=False,
+        )
 
         self.assertEqual(updates[0], 0)
         lines, offsets = list(zip(*pygtail.with_offsets()))
@@ -384,10 +397,15 @@ class PygtailTest(unittest.TestCase):
         pygtail.write_offset_to_file(offsets[1])
         self.assertEqual(updates[0], 1)
 
-        for i in range(len(offsets)-1):
-            self.assertLess(offsets[i], offsets[i+1])
+        for i in range(len(offsets) - 1):
+            self.assertLess(offsets[i], offsets[i + 1])
 
-        pygtail = Pygtail(self.logfile.name, save_on_end=False, on_update=record_update, copytruncate=False,)
+        pygtail = Pygtail(
+            self.logfile.name,
+            save_on_end=False,
+            on_update=record_update,
+            copytruncate=False,
+        )
         lines_new, offsets_new = list(zip(*pygtail.with_offsets()))
         self.assertEqual(len(lines_new), 1)
         self.assertEqual(updates[0], 1)
@@ -397,13 +415,15 @@ class PygtailTest(unittest.TestCase):
         """Test comparison operators of the Offset dataclass"""
         pygtail = Pygtail(self.logfile.name)
         _, offsets = list(zip(*pygtail.with_offsets()))
-        for i in range(len(offsets)-1, ):
-            self.assertLess(offsets[i], offsets[i+1])
-            self.assertLessEqual(offsets[i], offsets[i+1])
+        for i in range(
+            len(offsets) - 1,
+        ):
+            self.assertLess(offsets[i], offsets[i + 1])
+            self.assertLessEqual(offsets[i], offsets[i + 1])
             self.assertLessEqual(offsets[i], offsets[i])
-            self.assertGreater(offsets[i+1], offsets[i])
+            self.assertGreater(offsets[i + 1], offsets[i])
             self.assertGreaterEqual(offsets[i], offsets[i])
-            self.assertGreaterEqual(offsets[i+1], offsets[i])
+            self.assertGreaterEqual(offsets[i + 1], offsets[i])
 
     def test_compressed_full_lines(self):
         new_lines = ["4\n5\n", "6\n7\n"]
@@ -412,18 +432,36 @@ class PygtailTest(unittest.TestCase):
         self.append(new_lines[0])
 
         # put content to gzip file
-        gzip_handle = gzip.open("%s.1.gz" % self.logfile.name, 'wb')
-        with open(self.logfile.name, 'rb') as logfile:
+        gzip_handle = gzip.open("%s.1.gz" % self.logfile.name, "wb")
+        with open(self.logfile.name, "rb") as logfile:
             gzip_handle.write(logfile.read())
         gzip_handle.close()
 
-        with open(self.logfile.name, 'w'):
+        with open(self.logfile.name, "w"):
             # truncate file
             pass
 
         self.append(new_lines[1])
         pygtail = Pygtail(self.logfile.name, full_lines=True)
-        self.assertEqual(pygtail.read(), ''.join(new_lines))
+        self.assertEqual(pygtail.read(), "".join(new_lines))
+
+    def test_logrotate_race(self):
+        old_log_inode = os.stat(self.logfile.name).st_ino
+        pygtail = Pygtail(self.logfile.name)
+        pygtail.read()
+        pygtail.update_offset_file()
+
+        pygtail = Pygtail(self.logfile.name)
+        os.rename(self.logfile.name, "%s.1" % self.logfile.name)
+        self.append("")
+        new_log_inode = os.stat(self.logfile.name).st_ino
+        pygtail.read()
+        pygtail.update_offset_file()
+
+        with open(self.logfile.name + ".offset", "r") as f:
+            inode, offset = int(next(f)), int(next(f))
+        self.assertIn((inode, offset), [(old_log_inode, 6), (new_log_inode, 0)])
+
 
 def main():
     unittest.main(buffer=True)
